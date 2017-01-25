@@ -1,0 +1,9 @@
+{
+  "$type": "Octopus.Core.Model.Variables.LibraryVariableSet, Octopus.Core",
+  "Id": "LibraryVariableSets-4",
+  "Name": "Octopus Deploy Helper Functions",
+  "Description": "",
+  "VariableSetId": "variableset-LibraryVariableSets-4",
+  "ContentType": "ScriptModule",
+  "Templates": []
+}

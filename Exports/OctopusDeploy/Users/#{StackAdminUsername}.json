@@ -1,0 +1,17 @@
+{
+  "$type": "Octopus.Core.Model.Users.User, Octopus.Core",
+  "Id": "Users-2",
+  "Username": "#{StackAdminUsername}",
+  "DisplayName": "Admin",
+  "EmailAddress": "",
+  "Notes": null,
+  "PasswordHashed": "#{Encoding[OctopusHash].StackAdminPassword}",
+  "IsActive": true,
+  "IsService": false,
+  "ApiKey": null,
+  "ExternalId": null,
+  "IdentificationToken": "87f6242a-ed95-4417-896c-c21b6c38cdf1",
+  "SecurityGroupIds": [],
+  "SecurityGroupsLastUpdated": null,
+  "CanPasswordBeEdited": true
+}

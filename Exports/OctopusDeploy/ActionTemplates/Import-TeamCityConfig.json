@@ -1,0 +1,39 @@
+{
+  "$type": "Octopus.Core.Model.Projects.ActionTemplate, Octopus.Core",
+  "Id": "ActionTemplates-7",
+  "Name": "Import-TeamCityConfig",
+  "Description": null,
+  "Version": 6,
+  "ActionType": "Octopus.AzurePowerShell",
+  "CommunityActionTemplateId": null,
+  "Properties": {
+    "Octopus.Action.Package.FeedId": "feeds-builtin",
+    "Octopus.Action.Azure.AccountId": "azureserviceprincipal-microsoft-azure-service-principal",
+    "Octopus.Action.Script.ScriptSource": "Package",
+    "Octopus.Action.Script.ScriptFileName": "Import-TeamCityConfig.ps1",
+    "Octopus.Action.Package.PackageId": "AutomationStackScripts.Automation",
+    "Octopus.Action.Script.ScriptParameters": "-Path '#{Path}' -InfraRg '#{InfraRg}' -AutomationAccountName '#{AutomationAccountName}' -OctopusServerUrl '#{OctopusHostHeader}' -OctopusApiKey '#{APIKey}' -HostHeader '#{TeamCityHostHeader}' -TeamCityVersion '#{TeamCityVersion}'"
+  },
+  "Parameters": [
+    {
+      "Id": "55d47738-f54d-489b-be5f-e1d8f26a32b6",
+      "Name": "Path",
+      "Label": "",
+      "HelpText": null,
+      "DefaultValue": null,
+      "DisplaySettings": {
+        "Octopus.ControlType": "SingleLineText"
+      }
+    },
+    {
+      "Id": "57adf4a9-b599-4484-8b6e-d8a16a5b34c3",
+      "Name": "TeamCityVersion",
+      "Label": "",
+      "HelpText": null,
+      "DefaultValue": null,
+      "DisplaySettings": {
+        "Octopus.ControlType": "SingleLineText"
+      }
+    }
+  ]
+}

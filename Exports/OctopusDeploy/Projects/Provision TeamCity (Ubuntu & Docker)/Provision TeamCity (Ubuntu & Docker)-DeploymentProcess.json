@@ -1,0 +1,111 @@
+{
+  "$type": "Octopus.Core.Model.Projects.DeploymentProcess, Octopus.Core",
+  "Id": "deploymentprocess-Projects-6",
+  "OwnerId": "Projects-6",
+  "Version": 44,
+  "Steps": [
+    {
+      "Id": "825c74ca-8910-4f23-ac7a-be7564d2a6c5",
+      "Name": "Create TeamCityStack Resource Group",
+      "Condition": "Success",
+      "StartTrigger": "StartAfterPrevious",
+      "RequiresPackagesToBeAcquired": false,
+      "Actions": [
+        {
+          "Id": "5c4cf2c2-d9cb-497d-8b64-12b19783074a",
+          "Name": "Create TeamCityStack Resource Group",
+          "ActionType": "Octopus.AzurePowerShell",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.Azure.AccountId": "azureserviceprincipal-microsoft-azure-service-principal",
+            "Octopus.Action.Script.ScriptSource": "Package",
+            "Octopus.Action.Package.FeedId": "feeds-builtin",
+            "Octopus.Action.Script.ScriptFileName": "New-ResourceGroup.ps1",
+            "Octopus.Action.Package.PackageId": "AutomationStackScripts.Resources",
+            "Octopus.Action.Script.ScriptParameters": "-ResourceGroupName '#{ResourceGroupName}' -Location '#{Location}'",
+            "ResourceGroupName": "#{ResourceGroup}",
+            "Location": "#{AzureRegion}",
+            "Octopus.Action.Template.Id": "ActionTemplates-10",
+            "Octopus.Action.Template.Version": "6"
+          }
+        }
+      ],
+      "Properties": {
+        "Octopus.Action.TargetRoles": "ARM Provisioning"
+      }
+    },
+    {
+      "Id": "85534b6f-ac63-4b6f-8937-1cbc0f2699d1",
+      "Name": "Provision Ubuntu VM with Docker",
+      "Condition": "Success",
+      "StartTrigger": "StartAfterPrevious",
+      "RequiresPackagesToBeAcquired": false,
+      "Actions": [
+        {
+          "Id": "b5538526-c7f5-4160-9691-884d3ba202f6",
+          "Name": "Provision Ubuntu VM with Docker",
+          "ActionType": "Octopus.AzureResourceGroup",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.Azure.AccountId": "azureserviceprincipal-microsoft-azure-service-principal",
+            "Octopus.Action.Azure.ResourceGroupName": "#{ResourceGroupName}",
+            "Octopus.Action.Azure.TemplateSource": "Package",
+            "Octopus.Action.Azure.ResourceGroupTemplateParameters": "OctopusDeploy\\dockerlinux.parameters.json",
+            "Octopus.Action.Azure.ResourceGroupDeploymentMode": "Complete",
+            "Octopus.Action.Azure.ResourceGroupTemplate": "dockerlinux.json",
+            "Octopus.Action.Package.FeedId": "feeds-builtin",
+            "Octopus.Action.Package.PackageId": "ARMTemplates",
+            "Octopus.Action.Template.Id": "ActionTemplates-4",
+            "Octopus.Action.Template.Version": "2",
+            "ResourceGroupName": "#{ResourceGroup}",
+            "ProductName": "TeamCity",
+            "ScriptFileName": "TeamCityPrepare.sh"
+          }
+        }
+      ],
+      "Properties": {
+        "Octopus.Action.TargetRoles": "ARM Provisioning"
+      }
+    },
+    {
+      "Id": "7bd7ab4b-e807-4c03-8dd1-caf6528a8de4",
+      "Name": "Deploy TeamCity Docker Image",
+      "Condition": "Success",
+      "StartTrigger": "StartAfterPrevious",
+      "RequiresPackagesToBeAcquired": false,
+      "Actions": [
+        {
+          "Id": "5a7f8576-f81a-4a0e-a84a-016c653bc9f5",
+          "Name": "Deploy TeamCity Docker Image",
+          "ActionType": "Octopus.DockerRun",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.Docker.NetworkType": "bridge",
+            "Octopus.Action.Docker.RestartPolicy": "no",
+            "Octopus.Action.Package.FeedId": "feeds-docker-hub",
+            "Octopus.Action.Package.PackageId": "jetbrains/teamcity-server",
+            "Octopus.Action.Docker.PortMapping": "{\"8111\":\"80\"}",
+            "Octopus.Action.Docker.VolumeBindings": "{\"/data/teamcity_server/datadir\":{\"host\":\"/tmp/teamcity/data\",\"readOnly\":false,\"noCopy\":false},\"/opt/teamcity/logs\":{\"host\":\"/tmp/teamcity/logs\",\"readOnly\":false,\"noCopy\":false}}",
+            "Octopus.Action.Docker.EnvVariable": "{\"TEAMCITY_SERVER_MEM_OPTS\":\"-Xmx2g -XX:MaxPermSize=270m -XX:ReservedCodeCacheSize=350m\"}"
+          }
+        }
+      ],
+      "Properties": {
+        "Octopus.Action.TargetRoles": "TeamCity Server (Linux)"
+      }
+    }
+  ],
+  "RelatedDocumentIds": []
+}

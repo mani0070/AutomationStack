@@ -1,1 +1,0 @@
-Remove-AzureRmResourceGroup -Name ('OctopusStack{0}' -f $UDP) -Force

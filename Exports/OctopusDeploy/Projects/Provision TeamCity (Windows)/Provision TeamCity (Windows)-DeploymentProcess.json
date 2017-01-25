@@ -1,0 +1,392 @@
+{
+  "$type": "Octopus.Core.Model.Projects.DeploymentProcess, Octopus.Core",
+  "Id": "deploymentprocess-Projects-7",
+  "OwnerId": "Projects-7",
+  "Version": 141,
+  "Steps": [
+    {
+      "Id": "f915e03f-4a5b-4fa2-aa88-d572523b1b3b",
+      "Name": "Download DSC Configuration",
+      "Condition": "Success",
+      "StartTrigger": "StartAfterPrevious",
+      "RequiresPackagesToBeAcquired": false,
+      "Actions": [
+        {
+          "Id": "5ccf1a3b-a1e9-49f8-a1cd-9d21daa08883",
+          "Name": "Download DSC Configuration",
+          "ActionType": "Octopus.Script",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.Script.ScriptSource": "Package",
+            "Octopus.Action.RunOnServer": "true",
+            "Octopus.Action.Script.ScriptFileName": "Copy-AzureFileShare.ps1",
+            "Octopus.Action.Package.FeedId": "feeds-builtin",
+            "Octopus.Action.Package.PackageId": "AutomationStackScripts.Storage",
+            "Octopus.Action.Script.ScriptParameters": "-StorageAccountName '#{StorageAccountName}' -StorageAccountKey '#{StorageAccountKey}' -FileShareName '#{FileShareName}' -LocalPath '#{LocalPath}'",
+            "LocalPath": "#{DSCConfigPath}",
+            "StorageAccountName": "#{StorageAccountName}",
+            "StorageAccountKey": "#{StorageAccountKey}",
+            "FileShareName": "dsc",
+            "Octopus.Action.Template.Id": "ActionTemplates-5",
+            "Octopus.Action.Template.Version": "2"
+          }
+        }
+      ],
+      "Properties": {
+        "Octopus.Action.TargetRoles": "Azure Automation"
+      }
+    },
+    {
+      "Id": "03f54801-0ba1-4236-9ad2-9ae29e07e702",
+      "Name": "Import DSC Configuration",
+      "Condition": "Success",
+      "StartTrigger": "StartAfterPrevious",
+      "RequiresPackagesToBeAcquired": false,
+      "Actions": [
+        {
+          "Id": "dc901239-f596-408d-a3de-5456bec29c37",
+          "Name": "Import DSC Configuration",
+          "ActionType": "Octopus.AzurePowerShell",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.Package.FeedId": "feeds-builtin",
+            "Octopus.Action.Azure.AccountId": "azureserviceprincipal-microsoft-azure-service-principal",
+            "Octopus.Action.Script.ScriptSource": "Package",
+            "Octopus.Action.Script.ScriptFileName": "Import-TeamCityConfig.ps1",
+            "Octopus.Action.Package.PackageId": "AutomationStackScripts.Automation",
+            "Octopus.Action.Script.ScriptParameters": "-Path '#{Path}' -InfraRg '#{InfraRg}' -AutomationAccountName '#{AutomationAccountName}' -OctopusServerUrl '#{OctopusHostHeader}' -OctopusApiKey '#{APIKey}' -HostHeader '#{TeamCityHostHeader}' -TeamCityVersion '#{TeamCityVersion}'",
+            "Path": "#{DSCConfigFile}",
+            "TeamCityVersion": "#{TeamCityVersion}",
+            "Octopus.Action.Template.Id": "ActionTemplates-7",
+            "Octopus.Action.Template.Version": "6"
+          }
+        }
+      ],
+      "Properties": {
+        "Octopus.Action.TargetRoles": "Azure Automation"
+      }
+    },
+    {
+      "Id": "2b79ec1a-3a10-46eb-aeeb-fbbc92c6ffb3",
+      "Name": "Create TeamCity SQL Database",
+      "Condition": "Success",
+      "StartTrigger": "StartWithPrevious",
+      "RequiresPackagesToBeAcquired": false,
+      "Actions": [
+        {
+          "Id": "b6a74d09-acd4-4ea2-a362-a4b1525c2187",
+          "Name": "Create TeamCity SQL Database",
+          "ActionType": "Octopus.AzurePowerShell",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.Package.FeedId": "feeds-builtin",
+            "Octopus.Action.Azure.AccountId": "azureserviceprincipal-microsoft-azure-service-principal",
+            "Octopus.Action.Script.ScriptSource": "Package",
+            "Octopus.Action.Script.ScriptFileName": "New-AzureSQLDatabase.ps1",
+            "Octopus.Action.Package.PackageId": "AutomationStackScripts.AzureSQL",
+            "Octopus.Action.Script.ScriptParameters": "-ResourceGroupName '#{ResourceGroupName}' -ServerName '#{ServerName}' -DatabaseName '#{DatabaseName}'",
+            "ResourceGroupName": "#{InfraRg}",
+            "ServerName": "#{SqlServerName}",
+            "DatabaseName": "TeamCity",
+            "Octopus.Action.Template.Id": "ActionTemplates-9",
+            "Octopus.Action.Template.Version": "3"
+          }
+        }
+      ],
+      "Properties": {
+        "Octopus.Action.TargetRoles": "ARM Provisioning"
+      }
+    },
+    {
+      "Id": "de8a4950-683f-4ef5-82be-483909a15040",
+      "Name": "Create TeamCityStack Resource Group",
+      "Condition": "Success",
+      "StartTrigger": "StartWithPrevious",
+      "RequiresPackagesToBeAcquired": false,
+      "Actions": [
+        {
+          "Id": "7938d04d-4ac5-4c6f-9c46-514a8cb466e8",
+          "Name": "Create TeamCityStack Resource Group",
+          "ActionType": "Octopus.AzurePowerShell",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.Azure.AccountId": "azureserviceprincipal-microsoft-azure-service-principal",
+            "Octopus.Action.Script.ScriptSource": "Package",
+            "Octopus.Action.Package.FeedId": "feeds-builtin",
+            "Octopus.Action.Script.ScriptFileName": "New-ResourceGroup.ps1",
+            "Octopus.Action.Package.PackageId": "AutomationStackScripts.Resources",
+            "Octopus.Action.Script.ScriptParameters": "-ResourceGroupName '#{ResourceGroupName}' -Location '#{Location}'",
+            "ResourceGroupName": "#{ResourceGroup}",
+            "Location": "#{AzureRegion}",
+            "Octopus.Action.Template.Id": "ActionTemplates-10",
+            "Octopus.Action.Template.Version": "6"
+          }
+        }
+      ],
+      "Properties": {
+        "Octopus.Action.TargetRoles": "ARM Provisioning"
+      }
+    },
+    {
+      "Id": "79aa8fe7-2b0b-47f6-a79f-5a3394c0962a",
+      "Name": "Provision Windows Server 2016 VM",
+      "Condition": "Success",
+      "StartTrigger": "StartAfterPrevious",
+      "RequiresPackagesToBeAcquired": false,
+      "Actions": [
+        {
+          "Id": "3ad48ac9-832b-46b0-b58a-8209010f9089",
+          "Name": "Provision Windows Server 2016 VM",
+          "ActionType": "Octopus.AzureResourceGroup",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.Azure.AccountId": "azureserviceprincipal-microsoft-azure-service-principal",
+            "Octopus.Action.Azure.TemplateSource": "Package",
+            "Octopus.Action.Azure.ResourceGroupTemplateParameters": "OctopusDeploy\\appserver.parameters.json",
+            "Octopus.Action.Azure.ResourceGroupDeploymentMode": "Complete",
+            "Octopus.Action.Azure.ResourceGroupTemplate": "appserver.json",
+            "Octopus.Action.Azure.ResourceGroupName": "#{ResourceGroupName}",
+            "Octopus.Action.Package.FeedId": "feeds-builtin",
+            "Octopus.Action.Package.PackageId": "ARMTemplates",
+            "ResourceGroupName": "#{ResourceGroup}",
+            "ProductName": "#{ProductName}",
+            "Octopus.Action.Template.Id": "ActionTemplates-3",
+            "Octopus.Action.Template.Version": "6",
+            "NodeConfigurationName": "#{DSCConfigurationName}.#{DSCNodeName}"
+          }
+        }
+      ],
+      "Properties": {
+        "Octopus.Action.TargetRoles": "ARM Provisioning"
+      }
+    },
+    {
+      "Id": "04461a02-728d-4c9b-be71-e328fe016010",
+      "Name": "Enable KeyVault Disk Encryption",
+      "Condition": "Success",
+      "StartTrigger": "StartAfterPrevious",
+      "RequiresPackagesToBeAcquired": false,
+      "Actions": [
+        {
+          "Id": "777ec44e-d16d-4433-941f-cc1a7d8a86a2",
+          "Name": "Enable KeyVault Disk Encryption",
+          "ActionType": "Octopus.AzureResourceGroup",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.Azure.AccountId": "azureserviceprincipal-microsoft-azure-service-principal",
+            "Octopus.Action.Azure.ResourceGroupName": "#{ResourceGroupName}",
+            "Octopus.Action.Azure.TemplateSource": "Package",
+            "Octopus.Action.Azure.ResourceGroupTemplateParameters": "OctopusDeploy\\appserver.enableencryption.parameters.json",
+            "Octopus.Action.Azure.ResourceGroupDeploymentMode": "Incremental",
+            "Octopus.Action.Azure.ResourceGroupTemplate": "appserver.enableencryption.json",
+            "Octopus.Action.Package.FeedId": "feeds-builtin",
+            "Octopus.Action.Package.PackageId": "ARMTemplates",
+            "ResourceGroupName": "#{ResourceGroup}",
+            "ProductName": "#{ProductName}",
+            "KeyVaultSecretUrl": "#{Octopus.Action[Provision Windows Server 2016 VM].Output.AzureRMOutputs[keyVaultSecretUrl]}",
+            "Octopus.Action.Template.Id": "ActionTemplates-2",
+            "Octopus.Action.Template.Version": "3"
+          }
+        }
+      ],
+      "Properties": {
+        "Octopus.Action.TargetRoles": "ARM Provisioning"
+      }
+    },
+    {
+      "Id": "fba9af51-e22e-4882-b99f-1f74985581f0",
+      "Name": "Wait for DSC Node Compliance",
+      "Condition": "Success",
+      "StartTrigger": "StartAfterPrevious",
+      "RequiresPackagesToBeAcquired": false,
+      "Actions": [
+        {
+          "Id": "dcc8980a-b231-4a1a-abc5-89ab6cb357a7",
+          "Name": "Wait for DSC Node Compliance",
+          "ActionType": "Octopus.AzurePowerShell",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.Package.FeedId": "feeds-builtin",
+            "Octopus.Action.Azure.AccountId": "azureserviceprincipal-microsoft-azure-service-principal",
+            "Octopus.Action.Script.ScriptSource": "Package",
+            "Octopus.Action.Script.ScriptFileName": "Invoke-CustomScript.ps1",
+            "Octopus.Action.Package.PackageId": "AutomationStackScripts.Compute",
+            "Octopus.Action.Script.ScriptParameters": "-Name '#{Name}' -ResourceGroupName '#{ResourceGroupName}' -VMName '#{VMName}' -Location '#{Location}' -StorageAccountName '#{StorageAccountName}' -StorageAccountKey '#{StorageAccountKey}'",
+            "Octopus.Action.Template.Id": "ActionTemplates-8",
+            "Octopus.Action.Template.Version": "3",
+            "Location": "#{AzureRegion}",
+            "StorageAccountName": "#{StorageAccountName}",
+            "StorageAccountKey": "#{StorageAccountKey}",
+            "ResourceGroupName": "#{ResourceGroup}",
+            "VMName": "#{VMName}",
+            "Name": "AutomationNodeCompliance"
+          }
+        }
+      ],
+      "Properties": {
+        "Octopus.Action.TargetRoles": "Azure Automation"
+      }
+    },
+    {
+      "Id": "0aadda3f-2fae-4ecb-8717-f44a38deeb60",
+      "Name": "Import Data",
+      "Condition": "Success",
+      "StartTrigger": "StartAfterPrevious",
+      "RequiresPackagesToBeAcquired": false,
+      "Actions": [
+        {
+          "Id": "c8022bc0-bcc1-4cb1-b2ee-01beeb54a415",
+          "Name": "Reset state",
+          "ActionType": "Octopus.Script",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.RunOnServer": "false",
+            "Octopus.Action.Script.Syntax": "PowerShell",
+            "Octopus.Action.Script.ScriptSource": "Inline",
+            "Octopus.Action.Script.ScriptBody": "if (Test-Path $ExportPath) {\n    Remove-Item $ExportPath -Recurse -Force\n}\nNew-Item -ItemType Directory -Path $ExportPath\n\nif (Test-Path $TeamCityDataDir) {\n    Remove-Item $TeamCityDataDir -Recurse -Force\n}\nNew-Item -ItemType Directory -Path $TeamCityDataDir\n"
+          }
+        },
+        {
+          "Id": "7f96fe71-7694-4b58-b379-c71d25d5c781",
+          "Name": "Retrieve Export",
+          "ActionType": "Octopus.Script",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.Script.ScriptSource": "Package",
+            "Octopus.Action.RunOnServer": "false",
+            "Octopus.Action.Script.ScriptFileName": "Copy-AzureFileShare.ps1",
+            "Octopus.Action.Package.FeedId": "feeds-builtin",
+            "Octopus.Action.Package.PackageId": "AutomationStackScripts.Storage",
+            "Octopus.Action.Script.ScriptParameters": "-StorageAccountName '#{StorageAccountName}' -StorageAccountKey '#{StorageAccountKey}' -FileShareName '#{FileShareName}' -LocalPath '#{LocalPath}'",
+            "LocalPath": "#{ExportPath}",
+            "StorageAccountName": "#{StorageAccountName}",
+            "StorageAccountKey": "#{StorageAccountKey}",
+            "FileShareName": "teamcity",
+            "Octopus.Action.Template.Id": "ActionTemplates-5",
+            "Octopus.Action.Template.Version": "2"
+          }
+        },
+        {
+          "Id": "60a2239f-48c9-433a-9ff8-9e3851480c3b",
+          "Name": "Prepare export for import",
+          "ActionType": "Octopus.Script",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.RunOnServer": "false",
+            "Octopus.Action.Script.Syntax": "PowerShell",
+            "Octopus.Action.Script.ScriptSource": "Inline",
+            "Octopus.Action.Script.ScriptBody": "Compress-Archive -Path \"${ExportPath}\\*\" -DestinationPath $ArchivePath -CompressionLevel Fastest\r\n\r\nNew-Item -Path $JDBCDst -ItemType Directory\r\nCopy-Item -Path $JDBCSrc -Destination $JDBCDst\r\n\r\n[system.io.file]::WriteAllText($DatabaseConfig, ([system.io.file]::ReadAllText($DatabaseConfig, [system.text.encoding]::UTF8)), [system.text.encoding]::ASCII)"
+          }
+        },
+        {
+          "Id": "18330634-5115-4bd1-8726-5a4463d840d8",
+          "Name": "Run maintainDB Restore",
+          "ActionType": "Octopus.Script",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.RunOnServer": "false",
+            "Octopus.Action.Script.Syntax": "PowerShell",
+            "Octopus.Action.Script.ScriptSource": "Inline",
+            "Octopus.Action.Script.ScriptBody": "& C:\\TeamCity\\bin\\maintainDB.cmd restore -F $ArchivePath -T $DatabaseConfig"
+          }
+        },
+        {
+          "Id": "1136ddc9-bbf3-4660-94d5-441eaf5d8aad",
+          "Name": "Restore Data Folder",
+          "ActionType": "Octopus.Script",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.RunOnServer": "false",
+            "Octopus.Action.Script.Syntax": "PowerShell",
+            "Octopus.Action.Script.ScriptSource": "Inline",
+            "Octopus.Action.Script.ScriptBody": "$srcConfig = Join-Path $ExportPath 'config'\n$dstConfig = Join-Path $TeamCityDataDir 'config'\nif (Test-Path $dstConfig) {\n    Remove-Item -Path $dstConfig -Recurse -Force \n}\nCopy-Item -Recurse -Force -Path $srcConfig -Destination $TeamCityDataDir"
+          }
+        },
+        {
+          "Id": "3c132e0f-539f-48db-8936-41fcdb56f6f6",
+          "Name": "Install Service",
+          "ActionType": "Octopus.Script",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.RunOnServer": "false",
+            "Octopus.Action.Script.Syntax": "PowerShell",
+            "Octopus.Action.Script.ScriptSource": "Inline",
+            "Octopus.Action.Script.ScriptBody": "& \"${TeamCityBin}teamcity-server.bat\" service install /runAsSystem"
+          }
+        },
+        {
+          "Id": "8c54309b-aa19-4636-9495-57419df1517c",
+          "Name": "Start TeamCity",
+          "ActionType": "Octopus.Script",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.RunOnServer": "false",
+            "Octopus.Action.Script.Syntax": "PowerShell",
+            "Octopus.Action.Script.ScriptSource": "Inline",
+            "Octopus.Action.Script.ScriptBody": "Start-Service TeamCity"
+          }
+        }
+      ],
+      "Properties": {
+        "Octopus.Action.TargetRoles": "TeamCity Server (Windows)"
+      }
+    }
+  ],
+  "RelatedDocumentIds": []
+}

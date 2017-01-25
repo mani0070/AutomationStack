@@ -1,1 +1,0 @@
-Remove-AzureRmResourceGroup -Name ('TeamCityStack{0}' -f $UDP) -Force

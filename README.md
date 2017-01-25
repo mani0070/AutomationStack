@@ -1,28 +1,33 @@
 # Automation Stack
-Showcasing the power of DevOps automation.
+A DevOps Automation Sandbox
 
+## Build The Environment
+Open *PowerShell* and run the following command
+```PowerShell
+irm https://git.io/automationstack | iex
 ```
-(new-object Net.WebClient).DownloadString('https://raw.githubusercontent.com/paulmarsy/AutomationStack/master/bootstrap.ps1') | iex
+
+_If you have downloaded the repository independently the environment can be built with_
+```PowerShell
+Import-Module .\AutomationStack.psd1
+New-AutomationStack
 ```
 
-## What
-* One PowerShell command that anyone can copy & paste.
-* Fully automates the provisioning, deployment and configuration of an idealised DevOps build & deploy infrastructure
-* Leaves you with a usable sandbox environment, and the ability to automate the tearing down and clean up of any resources used.
+### Provisioning TeamCity and enabling additional functionality
 
-## How
-* All scripts, code or config must come from this repository
-* It should be clear what is happening, and for the process to be as transparent and easy to follow as is possible
-* The only user interaction that is permitted is the first command that is run, after that everything is automated the only exception is for passwords or other senstivie config and this must be collected within the first few seconds.
+Deploy the _Provision TeamCity (Windows)_ or _Provision TeamCity (Linux)_ project from Octopus
 
-## Using
-* Windows PowerShell 5 (bootstrap script)
-* Infrastructure
-  * Microsoft Azure - ARM Templates
-  * Windows Server 2016
-* Build
-  * TeamCity
-* Package Repository
-  * ProGet
-* Deploy
-  * Octopus Deploy
+Other functionality such as _Create TeamCity Agent Cloud Image_ are made available by Octopus Deploy projects that are imported during it's provisioning process.
+
+### Removal & Cleanup
+The following command will clean up all Azure resources created during the initial provisioning and any created by Octopus Deploy projects
+```PowerShell
+Remove-AutomationStack
+```
+After this the only remnanents are
+  * The `AutomationStack` folder in the current directory 
+  * The Azure PowerShell Cmdlets if they weren't previously installed, they can be removed with the command
+
+  ```PowerShell
+  Get-InstalledModule -Name Azure* | Uninstall-Module
+  ```

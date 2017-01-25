@@ -1,0 +1,43 @@
+{
+  "$type": "Octopus.Core.Model.Projects.Project, Octopus.Core",
+  "Id": "Projects-8",
+  "Name": "Provision TeamCity Agent Cloud",
+  "Description": "",
+  "Slug": "provision-teamcity-agent-cloud",
+  "IsDisabled": false,
+  "VariableSetId": "variableset-Projects-8",
+  "DeploymentProcessId": "deploymentprocess-Projects-8",
+  "ProjectGroupId": "ProjectGroups-24",
+  "LifecycleId": "Lifecycles-21",
+  "AutoCreateRelease": false,
+  "IncludedLibraryVariableSetIds": [
+    "LibraryVariableSets-2",
+    "LibraryVariableSets-1",
+    "LibraryVariableSets-3",
+    "LibraryVariableSets-6"
+  ],
+  "UsedPackages": [
+    "ARMTemplates",
+    "AutomationStackScripts.Compute",
+    "AutomationStackScripts.Resources",
+    "AutomationStackScripts.Storage"
+  ],
+  "DefaultToSkipIfAlreadyInstalled": false,
+  "TenantedDeploymentMode": "Untenanted",
+  "VersioningStrategy": {
+    "DonorPackageStepId": null,
+    "Template": "#{Octopus.Version.LastMajor}.#{Octopus.Version.LastMinor}.#{Octopus.Version.NextPatch}"
+  },
+  "Templates": [],
+  "ReleaseCreationStrategy": {
+    "ReleaseCreationPackageStepId": "",
+    "ChannelId": null
+  },
+  "ProjectConnectivityPolicy": {
+    "SkipMachineBehavior": "None",
+    "TargetRoles": []
+  },
+  "AutoDeployReleaseOverrides": [],
+  "LogoAttachmentKey": "Projects-8",
+  "LogoAttachmentMimeType": "image/png"
+}

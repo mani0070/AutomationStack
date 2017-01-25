@@ -1,0 +1,51 @@
+{
+  "$type": "Octopus.Core.Model.Projects.ActionTemplate, Octopus.Core",
+  "Id": "ActionTemplates-1",
+  "Name": "ARM Template - Agent Server",
+  "Description": null,
+  "Version": 2,
+  "ActionType": "Octopus.AzureResourceGroup",
+  "CommunityActionTemplateId": null,
+  "Properties": {
+    "Octopus.Action.Azure.AccountId": "azureserviceprincipal-microsoft-azure-service-principal",
+    "Octopus.Action.Azure.ResourceGroupName": "#{ResourceGroupName}",
+    "Octopus.Action.Azure.TemplateSource": "Package",
+    "Octopus.Action.Azure.ResourceGroupTemplateParameters": "OctopusDeploy\\agentserver.parameters.json",
+    "Octopus.Action.Azure.ResourceGroupDeploymentMode": "Complete",
+    "Octopus.Action.Azure.ResourceGroupTemplate": "agentserver.json",
+    "Octopus.Action.Package.FeedId": "feeds-builtin",
+    "Octopus.Action.Package.PackageId": "ARMTemplates"
+  },
+  "Parameters": [
+    {
+      "Id": "87ad2e68-093f-49e7-8a98-5b67d2a90612",
+      "Name": "ProductName",
+      "Label": "",
+      "HelpText": null,
+      "DefaultValue": null,
+      "DisplaySettings": {
+        "Octopus.ControlType": "SingleLineText"
+      }
+    },
+    {
+      "Id": "6acc9696-2a84-4a09-a6cb-e64c41cf3027",
+      "Name": "NodeConfigurationName",
+      "Label": "",
+      "HelpText": null,
+      "DefaultValue": null,
+      "DisplaySettings": {
+        "Octopus.ControlType": "SingleLineText"
+      }
+    },
+    {
+      "Id": "35de74a6-e9bb-4204-b70f-19003dd8bf1c",
+      "Name": "ResourceGroupName",
+      "Label": "",
+      "HelpText": null,
+      "DefaultValue": null,
+      "DisplaySettings": {
+        "Octopus.ControlType": "SingleLineText"
+      }
+    }
+  ]
+}

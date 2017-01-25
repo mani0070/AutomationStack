@@ -1,0 +1,18 @@
+{
+  "$type": "Octopus.Core.Model.Users.Team, Octopus.Core",
+  "Id": "teams-administrators",
+  "Name": "Octopus Administrators",
+  "MemberUserIds": [
+    "Users-1",
+    "Users-2"
+  ],
+  "ExternalSecurityGroups": [],
+  "UserRoleIds": [
+    "userroles-systemadministrator"
+  ],
+  "ProjectIds": [],
+  "EnvironmentIds": [],
+  "TenantIds": [],
+  "ProjectGroupIds": [],
+  "TenantTags": []
+}

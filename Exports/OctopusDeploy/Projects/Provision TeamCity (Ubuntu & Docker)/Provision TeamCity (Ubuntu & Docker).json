@@ -1,0 +1,41 @@
+{
+  "$type": "Octopus.Core.Model.Projects.Project, Octopus.Core",
+  "Id": "Projects-6",
+  "Name": "Provision TeamCity (Ubuntu & Docker)",
+  "Description": "",
+  "Slug": "provision-teamcity-ubuntu-docker",
+  "IsDisabled": false,
+  "VariableSetId": "variableset-Projects-6",
+  "DeploymentProcessId": "deploymentprocess-Projects-6",
+  "ProjectGroupId": "ProjectGroups-24",
+  "LifecycleId": "Lifecycles-26",
+  "AutoCreateRelease": false,
+  "IncludedLibraryVariableSetIds": [
+    "LibraryVariableSets-2",
+    "LibraryVariableSets-1",
+    "LibraryVariableSets-3"
+  ],
+  "UsedPackages": [
+    "jetbrains/teamcity-server",
+    "ARMTemplates",
+    "AutomationStackScripts.Resources"
+  ],
+  "DefaultToSkipIfAlreadyInstalled": false,
+  "TenantedDeploymentMode": "Untenanted",
+  "VersioningStrategy": {
+    "DonorPackageStepId": "5a7f8576-f81a-4a0e-a84a-016c653bc9f5",
+    "Template": null
+  },
+  "Templates": [],
+  "ReleaseCreationStrategy": {
+    "ReleaseCreationPackageStepId": "",
+    "ChannelId": null
+  },
+  "ProjectConnectivityPolicy": {
+    "SkipMachineBehavior": "None",
+    "TargetRoles": []
+  },
+  "AutoDeployReleaseOverrides": [],
+  "LogoAttachmentKey": "Projects-6",
+  "LogoAttachmentMimeType": "image/png"
+}

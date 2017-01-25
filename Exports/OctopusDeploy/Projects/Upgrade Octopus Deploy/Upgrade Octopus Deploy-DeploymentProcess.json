@@ -1,0 +1,139 @@
+{
+  "$type": "Octopus.Core.Model.Projects.DeploymentProcess, Octopus.Core",
+  "Id": "deploymentprocess-Projects-10",
+  "OwnerId": "Projects-10",
+  "Version": 17,
+  "Steps": [
+    {
+      "Id": "e14ac594-ec1f-47fe-a1f8-9da5c59cbee5",
+      "Name": "Copy DSC Configurations",
+      "Condition": "Success",
+      "StartTrigger": "StartAfterPrevious",
+      "RequiresPackagesToBeAcquired": false,
+      "Actions": [
+        {
+          "Id": "7718b364-0244-4fbf-bd4b-3dbb2dee860c",
+          "Name": "Copy DSC Configurations",
+          "ActionType": "Octopus.Script",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.Script.ScriptSource": "Package",
+            "Octopus.Action.RunOnServer": "false",
+            "Octopus.Action.Script.ScriptFileName": "Copy-AzureFileShare.ps1",
+            "Octopus.Action.Package.FeedId": "feeds-builtin",
+            "Octopus.Action.Package.PackageId": "AutomationStackScripts.Storage",
+            "Octopus.Action.Script.ScriptParameters": "-StorageAccountName '#{StorageAccountName}' -StorageAccountKey '#{StorageAccountKey}' -FileShareName '#{FileShareName}' -LocalPath '#{LocalPath}'",
+            "Octopus.Action.Template.Id": "ActionTemplates-5",
+            "Octopus.Action.Template.Version": "2",
+            "StorageAccountName": "#{StorageAccountName}",
+            "StorageAccountKey": "#{StorageAccountKey}",
+            "LocalPath": "dsc",
+            "FileShareName": "dsc"
+          }
+        }
+      ],
+      "Properties": {
+        "Octopus.Action.TargetRoles": "Azure Automation"
+      }
+    },
+    {
+      "Id": "cb44f464-79fe-442b-a9ec-ee671cf8be57",
+      "Name": "Update DSC Configuration",
+      "Condition": "Success",
+      "StartTrigger": "StartAfterPrevious",
+      "RequiresPackagesToBeAcquired": false,
+      "Actions": [
+        {
+          "Id": "393752ff-69d6-460d-94ff-9b0e49567070",
+          "Name": "Update DSC Configuration",
+          "ActionType": "Octopus.AzurePowerShell",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.Package.FeedId": "feeds-builtin",
+            "Octopus.Action.Azure.AccountId": "azureserviceprincipal-microsoft-azure-service-principal",
+            "Octopus.Action.Script.ScriptSource": "Package",
+            "Octopus.Action.Script.ScriptFileName": "Import-OctopusConfig.ps1",
+            "Octopus.Action.Package.PackageId": "AutomationStackScripts.Automation",
+            "Octopus.Action.Script.ScriptParameters": "-Path '#{Path}' -InfraRg '#{InfraRg}' -AutomationAccountName '#{AutomationAccountName}' -VMName '#{VMName}' -ConnectionString '#{ConnectionString}' -HostHeader '#{HostHeader}' -OctopusVersionToInstall '#{OctopusVersionToInstall}'",
+            "Octopus.Action.Template.Id": "ActionTemplates-6",
+            "Octopus.Action.Template.Version": "0",
+            "Path": "dsc",
+            "VMName": "#{OctopusVMName}",
+            "ConnectionString": "#{OctopusConnectionString}",
+            "HostHeader": "#{OctopusHostHeader}",
+            "OctopusVersionToInstall": "#{Octopus.Release.Number}"
+          }
+        }
+      ],
+      "Properties": {
+        "Octopus.Action.TargetRoles": "Azure Automation"
+      }
+    },
+    {
+      "Id": "bc73d848-51a3-4536-b9b5-5dfb19d6a87b",
+      "Name": "Run DSC on OctopusVM",
+      "Condition": "Success",
+      "StartTrigger": "StartAfterPrevious",
+      "RequiresPackagesToBeAcquired": false,
+      "Actions": [
+        {
+          "Id": "23a7a06e-20ef-4204-81f0-d864545e4852",
+          "Name": "Run DSC on OctopusVM",
+          "ActionType": "Octopus.Script",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.RunOnServer": "true",
+            "Octopus.Action.Script.Syntax": "PowerShell",
+            "Octopus.Action.Script.ScriptSource": "Inline",
+            "Octopus.Action.Script.ScriptBody": "Update-DscConfiguration -Verbose -Wait\nStart-DscConfiguration -UseExisting -Wait -Verbose"
+          }
+        }
+      ],
+      "Properties": {
+        "Octopus.Action.TargetRoles": "Azure Automation"
+      }
+    },
+    {
+      "Id": "0762e2e5-7561-4418-8e28-0475c5f04e31",
+      "Name": "Octopus Deploy Version",
+      "Condition": "Failure",
+      "StartTrigger": "StartAfterPrevious",
+      "RequiresPackagesToBeAcquired": false,
+      "Actions": [
+        {
+          "Id": "8f92e3bd-6be4-4de4-a8aa-e240d5308d29",
+          "Name": "Octopus Deploy Version",
+          "ActionType": "Octopus.TentaclePackage",
+          "IsDisabled": false,
+          "Environments": [],
+          "ExcludedEnvironments": [],
+          "Channels": [],
+          "TenantTags": [],
+          "Properties": {
+            "Octopus.Action.Package.AutomaticallyRunConfigurationTransformationFiles": "False",
+            "Octopus.Action.Package.AutomaticallyUpdateAppSettingsAndConnectionStrings": "False",
+            "Octopus.Action.Package.DownloadOnTentacle": "True",
+            "Octopus.Action.Package.FeedId": "feeds-chocolatey",
+            "Octopus.Action.Package.PackageId": "OctopusDeploy"
+          }
+        }
+      ],
+      "Properties": {
+        "Octopus.Action.TargetRoles": "Octopus Deploy Server"
+      }
+    }
+  ],
+  "RelatedDocumentIds": []
+}

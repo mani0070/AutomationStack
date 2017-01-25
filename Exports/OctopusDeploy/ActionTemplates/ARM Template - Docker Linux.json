@@ -1,0 +1,51 @@
+{
+  "$type": "Octopus.Core.Model.Projects.ActionTemplate, Octopus.Core",
+  "Id": "ActionTemplates-4",
+  "Name": "ARM Template - Docker Linux",
+  "Description": null,
+  "Version": 2,
+  "ActionType": "Octopus.AzureResourceGroup",
+  "CommunityActionTemplateId": null,
+  "Properties": {
+    "Octopus.Action.Azure.AccountId": "azureserviceprincipal-microsoft-azure-service-principal",
+    "Octopus.Action.Azure.ResourceGroupName": "#{ResourceGroupName}",
+    "Octopus.Action.Azure.TemplateSource": "Package",
+    "Octopus.Action.Azure.ResourceGroupTemplateParameters": "OctopusDeploy\\dockerlinux.parameters.json",
+    "Octopus.Action.Azure.ResourceGroupDeploymentMode": "Complete",
+    "Octopus.Action.Azure.ResourceGroupTemplate": "dockerlinux.json",
+    "Octopus.Action.Package.FeedId": "feeds-builtin",
+    "Octopus.Action.Package.PackageId": "ARMTemplates"
+  },
+  "Parameters": [
+    {
+      "Id": "70fc18b2-d273-4006-af77-9014babb3051",
+      "Name": "ResourceGroupName",
+      "Label": "ResourceGroupName",
+      "HelpText": null,
+      "DefaultValue": null,
+      "DisplaySettings": {
+        "Octopus.ControlType": "SingleLineText"
+      }
+    },
+    {
+      "Id": "e2baec3b-17eb-423b-bc13-fb8bdc53c215",
+      "Name": "ProductName",
+      "Label": "",
+      "HelpText": null,
+      "DefaultValue": null,
+      "DisplaySettings": {
+        "Octopus.ControlType": "SingleLineText"
+      }
+    },
+    {
+      "Id": "2c217e28-3d20-4451-a796-3dc2b621736b",
+      "Name": "ScriptFileName",
+      "Label": "",
+      "HelpText": null,
+      "DefaultValue": null,
+      "DisplaySettings": {
+        "Octopus.ControlType": "SingleLineText"
+      }
+    }
+  ]
+}
